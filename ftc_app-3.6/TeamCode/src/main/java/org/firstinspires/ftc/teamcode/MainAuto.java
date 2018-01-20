@@ -37,16 +37,25 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="Basic: Linear OpMode", group="Linear Opmode")
+@Autonomous(name="Autonomous")
 public class MainAuto extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor bl = null; //Back Left
+    private DcMotor fl = null; //Front Left
+    private DcMotor br = null; //Back Right
+    private DcMotor fr = null; //Front Right
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
+        bl = hardwareMap.get(DcMotor.class, "bl"); //Back Left
+        fl = hardwareMap.get(DcMotor.class, "fl"); //Front Left
+        br = hardwareMap.get(DcMotor.class, "br"); //Back Right
+        fr = hardwareMap.get(DcMotor.class, "fr"); //Front Right
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
