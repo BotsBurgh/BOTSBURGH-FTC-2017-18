@@ -21,7 +21,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
 
+import org.firstinspires.ftc.teamcode.ClosableVuforiaLocalizer;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 
 
@@ -33,7 +35,7 @@ public class MainAuto extends LinearOpMode {
     private com.disnodeteam.dogecv.detectors.JewelDetector jewelDetector = null;
     public static final String TAG = "Vuforia VuMark Sample";
     OpenGLMatrix lastLocation = null;
-    VuforiaLocalizer vuforia;
+    ClosableVuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() {
@@ -48,11 +50,11 @@ public class MainAuto extends LinearOpMode {
         jewelDetector.maxDiffrence = 15;
         jewelDetector.ratioWeight = 15;
         jewelDetector.minArea = 700;
-        jewelDetector.enable();
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        parameters.vuforiaLicenseKey = "ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "AURQxD//////AAAAmYngwFbO2UCgq8vYsmJSh0AFi5T7oZniQK60vPjR2vPYoVEe2KnQ72Apf4hPpJp/gOwWhPHGyL/qFcKRv9YgHWJ2fkqNAVqrO6Aroh23A6jwpmA3UQccnchVFHSmNhJtk2ulyHo3yEUMKIJ2ZZOEZeAfjWoH07dCJbvfwKGKlu6Kd5aGLw/1rwmxU8cbemfBHi6blHVzqpghl7cNgormrXLhc/ssruqcchZYoCgIx5o2u7KMsyBTec5MjbAVDBMjVe2LW3twIplofuO6FbvSAjL1/GDY7at3WGaLXyZHmtobqmtC1lv91iKmKk0v+uWfbrgNqJAqZeCf+UZPjzGkBfcRQr3T18WzF5ZRNpJ0zkbr";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = new ClosableVuforiaLocalizer(parameters);
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         // Wait for the game to start (driver presses PLAY)
@@ -63,47 +65,51 @@ public class MainAuto extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            while (true) {
+                if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                    telemetry.addData("VuMark", "%s visible", vuMark);
+                    telemetry.update();
 
-                /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
-                 * on which VuMark was visible. */
-                telemetry.addData("VuMark", "%s visible", vuMark);
+                    OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
+                    telemetry.addData("Pose", format(pose));
 
-                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
-                 * it is perhaps unlikely that you will actually need to act on this pose information, but
-                 * we illustrate it nevertheless, for completeness. */
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
-                telemetry.addData("Pose", format(pose));
+                    if (pose != null) {
+                        VectorF trans = pose.getTranslation();
+                        Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
-                /* We further illustrate how to decompose the pose into useful rotational and
-                 * translational components */
-                if (pose != null) {
-                    VectorF trans = pose.getTranslation();
-                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                        // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                        double tX = trans.get(0);
+                        double tY = trans.get(1);
+                        double tZ = trans.get(2);
 
-                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                    double tX = trans.get(0);
-                    double tY = trans.get(1);
-                    double tZ = trans.get(2);
-
-                    // Extract the rotational components of the target relative to the robot
-                    double rX = rot.firstAngle;
-                    double rY = rot.secondAngle;
-                    double rZ = rot.thirdAngle;
+                        // Extract the rotational components of the target relative to the robot
+                        double rX = rot.firstAngle;
+                        double rY = rot.secondAngle;
+                        double rZ = rot.thirdAngle;
+                    }
+                    break;
+                }
+                else {
+                    telemetry.addData("VuMark", "not visible");
+                    telemetry.update();
                 }
             }
-            else {
-                telemetry.addData("VuMark", "not visible");
-            }
+            vuforia.close();
+            jewelDetector.enable();
             //Jewel
-            if (jewelDetector.getLastOrder().toString() == "BLUE_RED") {
-                telemetry.addData("Jewel Order: ", "BLUE_RED");
-            } else if (jewelDetector.getLastOrder().toString() == "RED_BLUE") {
-                telemetry.addData("Jewel Order: ", "RED_BLUE");
-            } else {
-                //DAB
+            while (true) {
+                if (jewelDetector.getLastOrder().toString() == "BLUE_RED") {
+                    telemetry.addData("Jewel Order: ", "BLUE_RED");
+                    break;
+                } else if (jewelDetector.getLastOrder().toString() == "RED_BLUE") {
+                    telemetry.addData("Jewel Order: ", "RED_BLUE");
+                    break;
+                } else {
+                    //DAB
+                }
+                telemetry.update();
             }
+
             telemetry.update();
             jewelDetector.disable();
             //Continue autonomous
