@@ -64,15 +64,14 @@ public class MainAuto extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            while (true) {
+            int exitVuforia = 0;
+            while (exitVuforia != 1) {
+                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
                 if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                     telemetry.addData("VuMark", "%s visible", vuMark);
-                    telemetry.update();
 
                     OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
                     telemetry.addData("Pose", format(pose));
-
                     if (pose != null) {
                         VectorF trans = pose.getTranslation();
                         Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
@@ -87,31 +86,33 @@ public class MainAuto extends LinearOpMode {
                         double rY = rot.secondAngle;
                         double rZ = rot.thirdAngle;
                     }
-                    break;
+                exitVuforia = 1;
                 }
                 else {
                     telemetry.addData("VuMark", "not visible");
-                    telemetry.update();
                 }
             }
+
             vuforia.close();
             jewelDetector.enable();
             //Jewel
-            while (true) {
+            int exitJewel = 0;
+            telemetry.addLine();
+            while (exitJewel != 1) {
                 if (jewelDetector.getLastOrder().toString() == "BLUE_RED") {
                     telemetry.addData("Jewel Order: ", "BLUE_RED");
-                    break;
+                    exitJewel=1;
                 } else if (jewelDetector.getLastOrder().toString() == "RED_BLUE") {
                     telemetry.addData("Jewel Order: ", "RED_BLUE");
-                    break;
+                    exitJewel=1;
                 } else {
-                    //DAB
+                    //Retry
                 }
-                telemetry.update();
             }
 
-            telemetry.update();
             jewelDetector.disable();
+            telemetry.update();
+
             //Continue autonomous
         }
     }
