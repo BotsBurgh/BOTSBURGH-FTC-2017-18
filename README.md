@@ -26,7 +26,9 @@ Lastly, in the file `com/disnodeteam/dogecv/OpenCVPipeline.java`, change line 38
 ## WARNING
 
 Created with Android Studio 3, may not work with other versions.
+
 Not backwards compatible with v3.5.
+
 Read the license
 
 ***
