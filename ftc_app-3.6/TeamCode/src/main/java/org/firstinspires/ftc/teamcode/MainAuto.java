@@ -110,11 +110,11 @@ public class MainAuto extends LinearOpMode {
                     if (jewelDetector.getLastOrder().toString() == "BLUE_RED") {
                         telemetry.addData("Jewel Order: ", "BLUE_RED");
                         //Do whatever is needed
-                        exitJewel=1;
+                        exitJewel=1; //Quit
                     } else if (jewelDetector.getLastOrder().toString() == "RED_BLUE") {
                         telemetry.addData("Jewel Order: ", "RED_BLUE");
                         //Do whatever is needed
-                        exitJewel=1;
+                        exitJewel=1; //Quit
                     } else {
                         //Retry
                     }
@@ -126,7 +126,9 @@ public class MainAuto extends LinearOpMode {
             jewelDetector.disable();
             telemetry.update();
 
-            //Continue autonomous
+            //Continue autonomous here
+            // --- --- --- --- ---
+            // --- --- --- --- ---
 
         }
     }
