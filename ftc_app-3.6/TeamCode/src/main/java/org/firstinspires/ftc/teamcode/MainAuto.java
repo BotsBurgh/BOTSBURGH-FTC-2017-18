@@ -100,6 +100,7 @@ public class MainAuto extends LinearOpMode {
             vuforia.close();
             //angle the phone down (just in case)
             //phoneServo.setPosition(phoneServo.getPos()-0.15);
+            sleep(500); // Wait for reset of camera
 
             jewelDetector.enable();
             //Jewel
@@ -109,10 +110,12 @@ public class MainAuto extends LinearOpMode {
                 if (opModeIsActive()) {
                     if (jewelDetector.getLastOrder().toString() == "BLUE_RED") {
                         telemetry.addData("Jewel Order: ", "BLUE_RED");
+                        telemetry.update();
                         //Do whatever is needed
                         exitJewel=1; //Quit
                     } else if (jewelDetector.getLastOrder().toString() == "RED_BLUE") {
                         telemetry.addData("Jewel Order: ", "RED_BLUE");
+                        telemetry.update();
                         //Do whatever is needed
                         exitJewel=1; //Quit
                     } else {
