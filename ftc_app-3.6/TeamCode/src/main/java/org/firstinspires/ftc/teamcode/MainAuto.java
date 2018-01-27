@@ -66,30 +66,32 @@ public class MainAuto extends LinearOpMode {
         while (opModeIsActive()) {
             int exitVuforia = 0;
             while (exitVuforia != 1) {
-                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-                    telemetry.addData("VuMark", "%s visible", vuMark);
+                while (opModeIsActive()) {
+                    RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                    if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                        telemetry.addData("VuMark", "%s visible", vuMark);
 
-                    OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
-                    telemetry.addData("Pose", format(pose));
-                    if (pose != null) {
-                        VectorF trans = pose.getTranslation();
-                        Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                        OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
+                        telemetry.addData("Pose", format(pose));
+                        if (pose != null) {
+                            VectorF trans = pose.getTranslation();
+                            Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
-                        // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                        double tX = trans.get(0);
-                        double tY = trans.get(1);
-                        double tZ = trans.get(2);
+                            // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                            double tX = trans.get(0);
+                            double tY = trans.get(1);
+                            double tZ = trans.get(2);
 
-                        // Extract the rotational components of the target relative to the robot
-                        double rX = rot.firstAngle;
-                        double rY = rot.secondAngle;
-                        double rZ = rot.thirdAngle;
+                            // Extract the rotational components of the target relative to the robot
+                            double rX = rot.firstAngle;
+                            double rY = rot.secondAngle;
+                            double rZ = rot.thirdAngle;
+                        }
+                        exitVuforia = 1;
                     }
-                exitVuforia = 1;
-                }
-                else {
-                    telemetry.addData("VuMark", "not visible");
+                    else {
+                        telemetry.addData("VuMark", "not visible");
+                    }
                 }
             }
 
@@ -102,14 +104,18 @@ public class MainAuto extends LinearOpMode {
             int exitJewel = 0;
             telemetry.addLine();
             while (exitJewel != 1) {
-                if (jewelDetector.getLastOrder().toString() == "BLUE_RED") {
-                    telemetry.addData("Jewel Order: ", "BLUE_RED");
-                    exitJewel=1;
-                } else if (jewelDetector.getLastOrder().toString() == "RED_BLUE") {
-                    telemetry.addData("Jewel Order: ", "RED_BLUE");
-                    exitJewel=1;
-                } else {
-                    //Retry
+                while (opModeIsActive()) {
+                    if (jewelDetector.getLastOrder().toString() == "BLUE_RED") {
+                        telemetry.addData("Jewel Order: ", "BLUE_RED");
+                        //Do whatever is needed
+                        exitJewel=1;
+                    } else if (jewelDetector.getLastOrder().toString() == "RED_BLUE") {
+                        telemetry.addData("Jewel Order: ", "RED_BLUE");
+                        //Do whatever is needed
+                        exitJewel=1;
+                    } else {
+                        //Retry
+                    }
                 }
             }
 
@@ -117,6 +123,7 @@ public class MainAuto extends LinearOpMode {
             telemetry.update();
 
             //Continue autonomous
+
         }
     }
     String format(OpenGLMatrix transformationMatrix) {
