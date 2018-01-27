@@ -94,6 +94,9 @@ public class MainAuto extends LinearOpMode {
             }
 
             vuforia.close();
+            //angle the phone down (just in case)
+            //phoneServo.setPosition(phoneServo.getPos()-0.15);
+
             jewelDetector.enable();
             //Jewel
             int exitJewel = 0;
