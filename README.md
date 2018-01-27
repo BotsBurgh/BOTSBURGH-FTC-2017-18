@@ -17,6 +17,7 @@ To download and use this, download (it's quite a large file) and open with Andro
 
 In the `org/opencv/android/CameraGLRendererBase.java` file, line 49 and 75; Change both occurrences of `CAMERA_ID_BACK` to `CAMERA_ID_FRONT`.
 Also, in the file `org/firstinspires/ftc/teamcode/MainAuto.java` line 56, change it from `parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;` to `parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;`
+Lastly, in the file `com/disnodeteam/dogecv/OpenCVPipeline.java`, change line 38 to `init(context, viewDisplay, 1);` for front, and `init(context, viewDisplay, 0);` for back
 
 ***
 
