@@ -53,7 +53,7 @@ public class MainAuto extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "AURQxD//////AAAAmYngwFbO2UCgq8vYsmJSh0AFi5T7oZniQK60vPjR2vPYoVEe2KnQ72Apf4hPpJp/gOwWhPHGyL/qFcKRv9YgHWJ2fkqNAVqrO6Aroh23A6jwpmA3UQccnchVFHSmNhJtk2ulyHo3yEUMKIJ2ZZOEZeAfjWoH07dCJbvfwKGKlu6Kd5aGLw/1rwmxU8cbemfBHi6blHVzqpghl7cNgormrXLhc/ssruqcchZYoCgIx5o2u7KMsyBTec5MjbAVDBMjVe2LW3twIplofuO6FbvSAjL1/GDY7at3WGaLXyZHmtobqmtC1lv91iKmKk0v+uWfbrgNqJAqZeCf+UZPjzGkBfcRQr3T18WzF5ZRNpJ0zkbr";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         this.vuforia = new ClosableVuforiaLocalizer(parameters);
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);

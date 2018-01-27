@@ -72,7 +72,7 @@ public abstract class CameraGLRendererBase implements GLSurfaceView.Renderer, Su
     protected int mCameraWidth = -1, mCameraHeight = -1;
     protected int mFBOWidth = -1, mFBOHeight = -1;
     protected int mMaxCameraWidth = -1, mMaxCameraHeight = -1;
-    protected int mCameraIndex = CameraBridgeViewBase.CAMERA_ID_ANY;
+    protected int mCameraIndex = CameraBridgeViewBase.CAMERA_ID_FRONT;
 
     protected SurfaceTexture mSTexture;
 
