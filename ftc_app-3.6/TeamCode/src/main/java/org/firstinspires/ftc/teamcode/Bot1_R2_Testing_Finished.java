@@ -50,9 +50,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
+import org.firstinspires.ftc.teamcode.ClosableVuforiaLocalizer;
+import com.disnodeteam.dogecv.CameraViewDisplay;
+
 @Autonomous(name="Bot1 R2 Testing Finished", group ="Concept")
 
 public class Bot1_R2_Testing_Finished extends LinearOpMode {
+
+    private com.disnodeteam.dogecv.detectors.JewelDetector jewelDetector = null;
     
     private final double UP_POS = 0.1;
     private final double DOWN_POS = 0.96;
@@ -79,7 +84,7 @@ public class Bot1_R2_Testing_Finished extends LinearOpMode {
     
     //Vuforia stuffs
     public static final String TAG = "Vuforia VuMark Sample";
-    VuforiaLocalizer vuforia;
+    ClosableVuforiaLocalizer vuforia;
     
     //run time
     private ElapsedTime runtime = new ElapsedTime();
@@ -116,7 +121,7 @@ public class Bot1_R2_Testing_Finished extends LinearOpMode {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "Aazdgn3/////AAAAGWj/wwSCikKhql6EpveSzXSD0H1p2+9y3wFZTeGaDPArhcfj5j63s3TJs5sanBeaBo0JyvTQlkOvM7JJC04G9r9N7Sp7KP10vKGjvRLHpt+zpMoQX8bsKinccU0A3jMDZOBzuhn1FYS0ekhb7d1DkC1iHBz9A3vq6cdBWCBH5o2tuxkoNsSmO9j5Q8sVIKk/6HSrbaiPug78kX30DYb4cgChGfc99wx4SfkEfwuT0MN+g89ZUOgC1y4D67MZs1EfMWIMLdSdKJM9f0KReS+kqedFVSaj1gEPHGH24E4jXhbVJ7qRYrN+p6CCb52Px/8Qkyvl+Q8Sv/QBEyZHiC4p9T3chDEpH3DDFywl/qdRUPT6";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;     //set the direction of the camera
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        this.vuforia = new ClosableVuforiaLocalizer(parameters);
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
@@ -148,6 +153,16 @@ public class Bot1_R2_Testing_Finished extends LinearOpMode {
         //servo set position
         servo.setPosition(UP_POS);
         turn.setPosition(.7);
+
+        //Init jewel detector
+        jewelDetector = new com.disnodeteam.dogecv.detectors.JewelDetector();
+        jewelDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+        jewelDetector.areaWeight = 0.02;
+        jewelDetector.detectionMode = com.disnodeteam.dogecv.detectors.JewelDetector.JewelDetectionMode.MAX_AREA;
+        jewelDetector.debugContours = true;
+        jewelDetector.maxDiffrence = 15;
+        jewelDetector.ratioWeight = 15;
+        jewelDetector.minArea = 700;
         
         //press the start button
         waitForStart();
@@ -177,13 +192,27 @@ public class Bot1_R2_Testing_Finished extends LinearOpMode {
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
         sleep(300);
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        if ((sensorColor.red() > sensorColor.blue()))
-        {
-            color = "red";
-        }
-        else
-        {
-            color = "blue";
+        int exitJewel=0;
+        while (exitJewel != 1) {
+            if (opModeIsActive()) {
+                if (jewelDetector.getLastOrder().toString() == "BLUE_RED") {
+                    telemetry.addData("Jewel Order: ", "BLUE_RED");
+                    telemetry.update();
+                    //Do whatever is needed
+                    color = "blue";
+                    exitJewel=1; //Quit
+                } else if (jewelDetector.getLastOrder().toString() == "RED_BLUE") {
+                    telemetry.addData("Jewel Order: ", "RED_BLUE");
+                    telemetry.update();
+                    //Do whatever is needed
+                    color = "red";
+                    exitJewel=1; //Quit
+                } else {
+                    //Retry
+                }
+            } else {
+                exitJewel=1;
+            }
         }
 
         if (color.equals("blue"))
