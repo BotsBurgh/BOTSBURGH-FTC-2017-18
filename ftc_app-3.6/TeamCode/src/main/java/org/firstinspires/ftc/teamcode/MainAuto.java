@@ -66,7 +66,7 @@ public class MainAuto extends LinearOpMode {
         while (opModeIsActive()) {
             int exitVuforia = 0;
             while (exitVuforia != 1) {
-                while (opModeIsActive()) {
+                if (opModeIsActive()) {
                     RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
                     if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                         telemetry.addData("VuMark", "%s visible", vuMark);
@@ -92,6 +92,8 @@ public class MainAuto extends LinearOpMode {
                     else {
                         telemetry.addData("VuMark", "not visible");
                     }
+                } else {
+                    exitVuforia=1;
                 }
             }
 
@@ -104,7 +106,7 @@ public class MainAuto extends LinearOpMode {
             int exitJewel = 0;
             telemetry.addLine();
             while (exitJewel != 1) {
-                while (opModeIsActive()) {
+                if (opModeIsActive()) {
                     if (jewelDetector.getLastOrder().toString() == "BLUE_RED") {
                         telemetry.addData("Jewel Order: ", "BLUE_RED");
                         //Do whatever is needed
@@ -116,6 +118,8 @@ public class MainAuto extends LinearOpMode {
                     } else {
                         //Retry
                     }
+                } else {
+                    exitJewel=1;
                 }
             }
 
