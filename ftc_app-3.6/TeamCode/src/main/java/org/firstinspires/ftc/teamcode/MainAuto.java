@@ -70,6 +70,7 @@ public class MainAuto extends LinearOpMode {
                     RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
                     if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                         telemetry.addData("VuMark", "%s visible", vuMark);
+                        telemetry.update();
 
                         OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
                         telemetry.addData("Pose", format(pose));
