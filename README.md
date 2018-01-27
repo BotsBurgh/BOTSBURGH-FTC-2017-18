@@ -13,6 +13,11 @@ This is done using DogeCV and some simple math to navigate the playing field.
 
 To download and use this, download (it's quite a large file) and open with Android Studio.
 
+### Changing Camera Orientation
+
+In the `org/opencv/android/CameraGLRendererBase.java` file, line 49 and 75; Change both occurrences of `CAMERA_ID_BACK` to `CAMERA_ID_FRONT`.
+Also, in the file `org/firstinspires/ftc/teamcode/MainAuto.java` line 56, change it from `parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;` to `parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;`
+
 ***
 
 ## WARNING
