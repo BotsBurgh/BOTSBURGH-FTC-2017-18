@@ -26,11 +26,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="495.45418"
-     inkscape:cy="841.27393"
+     inkscape:zoom="0.7"
+     inkscape:cx="990.90835"
+     inkscape:cy="637.99379"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1013"
@@ -49,6 +49,18 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Background">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.1935337;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect189"
+       width="229.42322"
+       height="303.88452"
+       x="-8.8782787"
+       y="-5.1877971" />
+  </g>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
@@ -3759,33 +3771,33 @@ EQEREBERAREQEREBERAREQEREBERAREQEREH/9k=
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="169.68445"
-       y="48.043388"
+       x="168.36153"
+       y="47.854401"
        id="text139"><tspan
          sodipodi:role="line"
          id="tspan137"
-         x="169.68445"
-         y="48.043388"
+         x="168.36153"
+         y="47.854401"
          style="stroke-width:0.26458332">open/close</tspan><tspan
          sodipodi:role="line"
-         x="169.68445"
-         y="55.980888"
+         x="168.36153"
+         y="55.791901"
          style="stroke-width:0.26458332"
          id="tspan185">relic grabber</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="169.03365"
-       y="67.873238"
+       x="168.27769"
+       y="67.211777"
        id="text143"><tspan
          sodipodi:role="line"
          id="tspan141"
-         x="169.03365"
-         y="67.873238"
+         x="168.27769"
+         y="67.211777"
          style="stroke-width:0.26458332">Tilt up/down</tspan><tspan
          sodipodi:role="line"
-         x="169.03365"
-         y="75.810738"
+         x="168.27769"
+         y="75.149277"
          style="stroke-width:0.26458332"
          id="tspan183">relic grabber</tspan></text>
     <text
