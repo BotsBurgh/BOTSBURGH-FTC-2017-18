@@ -1,4 +1,4 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
+/* Copyright (c) 2018 Sambhav Saggi and Nitesh Ramanathan. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted (subject to the limitations in the disclaimer below) provided that
@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -53,27 +54,45 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
 @Disabled
 public class TeleOp1 extends LinearOpMode {
+    //Set some constants
+    public static int GROPEN  = 0;
+    public static int GLOPEN  = 0;
+    public static int GRCLOSE = 0;
+    public static int GLCLOSE = 0;
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+    //Drive motors
+    private DcMotor lf = null;
+    private DcMotor rf = null;
+    private DcMotor lb = null;
+    private DcMotor rb = null;
+    //Glyph grabber
+    private Servo   gl = null;
+    private Servo   gr = null;
 
     @Override
     public void runOpMode() {
+        boolean gbstate = false;
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        //Init the motors
+        lf = hardwareMap.get(DcMotor.class, "lf");
+        rf = hardwareMap.get(DcMotor.class, "rf");
+        lb = hardwareMap.get(DcMotor.class, "lb");
+        rb = hardwareMap.get(DcMotor.class, "rb");
+
+        //Init the servos
+        gl = hardwareMap.get(Servo.class, "gl");
+        gr = hardwareMap.get(Servo.class, "gr");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        lf.setDirection(DcMotor.Direction.FORWARD);
+        rf.setDirection(DcMotor.Direction.REVERSE);
+        lb.setDirection(DcMotor.Direction.FORWARD);
+        rb.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -102,13 +121,35 @@ public class TeleOp1 extends LinearOpMode {
             // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
-            leftDrive.setPower(leftPower);
-            rightDrive.setPower(rightPower);
+            lf.setPower(leftPower);
+            rf.setPower(rightPower);
+            lb.setPower(leftPower);
+            rb.setPower(rightPower);
+            if (gamepad1.right_bumper) {
+                gbstate = !gbstate;
+            }
+
+            if (gbstate) {
+                closeGrabber();
+            } else {
+                openGrabber();
+            }
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Glyph Grabber ", gbstate);
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
         }
+    }
+    public void openGrabber() {
+        //Open the grabber
+        gl.setPosition(GLOPEN);
+        gr.setPosition(GROPEN);
+    }
+    public void closeGrabber() {
+        //Close the grabber
+        gl.setPosition(GLCLOSE);
+        gl.setPosition(GRCLOSE);
     }
 }
