@@ -25,4 +25,10 @@ repositories {
 apply from: 'build.release.gradle'
 
 dependencies {
+    implementation files('C:/Users/smsag_000/Desktop/BOTSBURGH-FTC-2017-18/ftc_app/libs/Hardware-release-sources.jar')
+    implementation files('C:/Users/smsag_000/Desktop/BOTSBURGH-FTC-2017-18/ftc_app/libs/Vuforia.jar')
+    implementation files('C:/Users/smsag_000/Desktop/BOTSBURGH-FTC-2017-18/ftc_app/libs/Inspection-release-sources.jar')
+    implementation files('C:/Users/smsag_000/Desktop/BOTSBURGH-FTC-2017-18/ftc_app/libs/FtcCommon-release-sources.jar')
+    implementation files('C:/Users/smsag_000/Desktop/BOTSBURGH-FTC-2017-18/ftc_app/libs/Blocks-release-sources.jar')
+    implementation files('C:/Users/smsag_000/Desktop/BOTSBURGH-FTC-2017-18/ftc_app/libs/RobotCore-release-sources.jar')
 }
