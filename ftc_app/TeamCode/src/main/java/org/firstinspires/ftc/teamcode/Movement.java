@@ -15,32 +15,77 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import java.util.Locale;
 
 public class Movement {
-    public void move(int inches, DcMotor motor1, DcMotor motor2) {
-        motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor1.setTargetPosition(inches);
-        motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor2.setTargetPosition(inches);
-        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    private double TURN_POWER  = 0.4;
+    private double DRIVE_POWER = 0.6;
+    DcMotor lf, rf, lb, rb;
+    BNO055IMU gyro;
+    Movement(DcMotor lf, DcMotor rf, DcMotor lb, DcMotor rb, BNO055IMU gyro) {
+        this.lf   = lf;
+        this.rf   = rf;
+        this.lb   = lb;
+        this.rb   = rb;
+        this.gyro = gyro;
     }
-    public void turn(Orientation angles, DcMotor motor1, DcMotor motor2, BNO055IMU imu) {
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-        Orientation current = imu.getAngularOrientation();
+    public void moveEnc(int inches) {
+        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lf.setTargetPosition(inches);
+        rf.setTargetPosition(inches);
+        lb.setTargetPosition(inches);
+        rb.setTargetPosition(inches);
+        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (inches < 0) {
+            lf.setPower(DRIVE_POWER);
+            rf.setPower(DRIVE_POWER);
+            lb.setPower(DRIVE_POWER);
+            rb.setPower(DRIVE_POWER);
+        } else if (inches > 0) {
+            lf.setPower(-DRIVE_POWER);
+            rf.setPower(-DRIVE_POWER);
+            lb.setPower(-DRIVE_POWER);
+            rb.setPower(-DRIVE_POWER);
+        } else {
+            lf.setPower(0);
+            rf.setPower(0);
+            lb.setPower(0);
+            rb.setPower(0);
+        }
+    }
+    public void turn(Orientation angles) {
+        gyro.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        Orientation current = gyro.getAngularOrientation();
         if (current.firstAngle > angles.firstAngle) {
             while (current.firstAngle != angles.firstAngle) {
-                motor1.setPower(0.4);
-                motor2.setPower(-0.4);
+                lf.setPower(TURN_POWER);
+                rf.setPower(-TURN_POWER);
+                lb.setPower(TURN_POWER);
+                rb.setPower(-TURN_POWER);
             }
         } else if (current.firstAngle < angles.firstAngle) {
             while (current.firstAngle != angles.firstAngle) {
-                motor1.setPower(-0.4);
-                motor2.setPower(0.4);
+                lf.setPower(-TURN_POWER);
+                rf.setPower(TURN_POWER);
+                lb.setPower(-TURN_POWER);
+                rb.setPower(TURN_POWER);
             }
         } else {
-            motor1.setPower(0);
-            motor2.setPower(0);
+            lf.setPower(0);
+            rf.setPower(0);
+            lb.setPower(0);
+            rb.setPower(0);
         }
 
+    }
+    public void move(double lpower, double rpower) {
+        lf.setPower(lpower);
+        rf.setPower(rpower);
+        lb.setPower(lpower);
+        rb.setPower(rpower);
     }
     //----------------------------------------------------------------------------------------------
     // Formatting

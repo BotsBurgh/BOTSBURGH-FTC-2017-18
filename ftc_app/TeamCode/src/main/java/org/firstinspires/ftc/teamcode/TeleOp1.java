@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -66,9 +67,12 @@ public class TeleOp1 extends LinearOpMode {
     private DcMotor rf = null;
     private DcMotor lb = null;
     private DcMotor rb = null;
+    //Gyro
+    private BNO055IMU gyro;
     //Glyph grabber
     private Servo   gl = null;
     private Servo   gr = null;
+    private Movement movement = new Movement(lf, rf, lb, rb, gyro);
 
     @Override
     public void runOpMode() {
@@ -112,10 +116,7 @@ public class TeleOp1 extends LinearOpMode {
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
             // Send calculated power to wheels
-            lf.setPower(leftPower);
-            rf.setPower(rightPower);
-            lb.setPower(leftPower);
-            rb.setPower(rightPower);
+            movement.move(leftPower, rightPower);
             if (gamepad1.right_bumper) {
                 gbstate = !gbstate;
             }
